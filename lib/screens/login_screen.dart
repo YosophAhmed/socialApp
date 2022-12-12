@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
+import 'package:social_app/widgets/custom_botton.dart';
 import 'package:social_app/widgets/custom_divider.dart';
 
+import '../widgets/custom_text_form_field.dart';
 import '../widgets/custom_top_image.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,6 +16,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  bool obscure = true;
+
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(
@@ -33,35 +38,72 @@ class _LoginScreenState extends State<LoginScreen> {
             const CustomTopImage(
               imageName: 'assets/images/social.png',
             ),
-            SizedBox(
-              height: 10.h,
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Email',
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14.sp,
-                ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  CustomTextFormField(
+                    hintText: 'Email',
+                    onChanged: (value){},
+                    onSubmitted: (value){},
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  CustomTextFormField(
+                    hintText: 'Password',
+                    onChanged: (value){},
+                    onSubmitted: (value){},
+                    keyboardType: TextInputType.visiblePassword,
+                    suffix: obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                    obscure: obscure,
+                    suffixFunction: (){
+                      setState(() {
+                        obscure = !obscure;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  CustomButton(
+                    label: 'Log in',
+                    onTap: () {},
+                  ),
+                  SizedBox(
+                    height: 1.h,
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueAccent),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4.h,
+                  ),
+                  const CustomDivider(
+                    text: ' OR ',
+                  ),
+                  SizedBox(
+                    height: 4.h,
+                  ),
+                  CustomButton(
+                    label: 'Create new Social account',
+                    onTap: () {},
+                    buttonColor: Colors.green,
+                    buttonWidth: 60.w,
+                  ),
+                ],
               ),
-            ),
-            SizedBox(
-              height: 3.h,
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Password',
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14.sp,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 3.h,
-            ),
-            const CustomDivider(
-              text: ' OR ',
             ),
           ],
         ),
@@ -69,3 +111,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
