@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
-import 'package:social_app/screens/auth/register_screen.dart';
+import 'package:social_app/screens/auth_screens/register_screen.dart';
 import 'package:social_app/widgets/custom_botton.dart';
 import 'package:social_app/widgets/custom_divider.dart';
+import 'package:social_app/widgets/custom_snackbar.dart';
 
-import '../../../widgets/custom_text_form_field.dart';
-import '../../../widgets/custom_top_image.dart';
-import 'cubit/cubit.dart';
-import 'cubit/states.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../cubits/auth_cubit/auth_states.dart';
+import '../../widgets/custom_text_form_field.dart';
+import '../../widgets/custom_top_image.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = 'LoginScreen';
@@ -20,6 +21,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String? email;
+  String? password;
+
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(
@@ -33,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => LoginCubit(),
+      create: (BuildContext context) => AuthCubit(),
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -41,10 +45,28 @@ class _LoginScreenState extends State<LoginScreen> {
               const CustomTopImage(
                 imageName: 'assets/images/social.png',
               ),
-              BlocBuilder<LoginCubit, LoginState>(
+              BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state is LoadingAuthState) {
+                    customSnackBar(
+                      context: context,
+                      message: 'Loading',
+                    );
+                  } else if (state is SuccessAuthState) {
+                    customSnackBar(
+                      context: context,
+                      message: 'Success Login',
+                    );
+                  } else if (state is ErrorAuthState) {
+                    customSnackBar(
+                      context: context,
+                      message: state.error,
+                    );
+                  }
+                },
                 builder: (context, state) {
                   return Form(
-                    key: BlocProvider.of<LoginCubit>(context).formKey,
+                    key: BlocProvider.of<AuthCubit>(context).formKey,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.w),
                       child: Column(children: [
@@ -52,27 +74,35 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 10.h,
                         ),
                         CustomTextFormField(
-                          controller: BlocProvider.of<LoginCubit>(context)
+                          controller: BlocProvider.of<AuthCubit>(context)
                               .emailController,
                           hintText: 'Email',
-                          onChanged: (value) {},
-                          onSubmitted: (value) {},
+                          onChanged: (value) {
+                            email = value;
+                          },
+                          onSubmitted: (value) {
+                            email = value;
+                          },
                           keyboardType: TextInputType.emailAddress,
                         ),
                         SizedBox(
                           height: 3.h,
                         ),
                         CustomTextFormField(
-                          controller: BlocProvider.of<LoginCubit>(context)
+                          controller: BlocProvider.of<AuthCubit>(context)
                               .passwordController,
                           hintText: 'Password',
-                          onChanged: (value) {},
-                          onSubmitted: (value) {},
+                          onChanged: (value) {
+                            password = value;
+                          },
+                          onSubmitted: (value) {
+                            password = value;
+                          },
                           keyboardType: TextInputType.visiblePassword,
-                          suffix: BlocProvider.of<LoginCubit>(context).suffix,
-                          obscure: BlocProvider.of<LoginCubit>(context).obscure,
+                          suffix: BlocProvider.of<AuthCubit>(context).suffix,
+                          obscure: BlocProvider.of<AuthCubit>(context).obscure,
                           suffixFunction: () {
-                            BlocProvider.of<LoginCubit>(context)
+                            BlocProvider.of<AuthCubit>(context)
                                 .changePasswordVisibility();
                           },
                         ),
@@ -81,7 +111,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         CustomButton(
                           label: 'Log in',
-                          onTap: () {},
+                          onTap: () async {
+                            if (BlocProvider.of<AuthCubit>(context)
+                                .formKey
+                                .currentState!
+                                .validate()) {
+                              BlocProvider.of<AuthCubit>(context).login(
+                                email: email!,
+                                password: password!,
+                              );
+                            }
+                          },
                         ),
                         SizedBox(
                           height: 1.h,
@@ -108,7 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         CustomButton(
                           label: 'Create new Social account',
                           onTap: () {
-                            Navigator.pushNamedAndRemoveUntil(context, RegisterScreen.routeName, (route) => false);
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                RegisterScreen.routeName, (route) => false);
                           },
                           buttonColor: Colors.green,
                           buttonWidth: 60.w,

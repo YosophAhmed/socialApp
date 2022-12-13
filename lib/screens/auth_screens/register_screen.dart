@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
-import 'package:social_app/screens/auth/login/login_screen.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/auth_cubit/auth_states.dart';
@@ -11,6 +10,7 @@ import '../../widgets/custom_divider.dart';
 import '../../widgets/custom_snackbar.dart';
 import '../../widgets/custom_text_form_field.dart';
 import '../../widgets/custom_top_image.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String routeName = 'RegisterScreen';
@@ -75,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 10.w),
                       child: Column(children: [
                         SizedBox(
-                          height: 10.h,
+                          height: 5.h,
                         ),
                         CustomTextFormField(
                           controller: BlocProvider.of<AuthCubit>(context)
