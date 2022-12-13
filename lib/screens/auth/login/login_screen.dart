@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
-import 'package:social_app/screens/auth/register/register_screen.dart';
+import 'package:social_app/screens/auth/register_screen.dart';
 import 'package:social_app/widgets/custom_botton.dart';
 import 'package:social_app/widgets/custom_divider.dart';
 
