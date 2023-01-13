@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
+import 'package:social_app/screens/home_screen.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/auth_cubit/auth_states.dart';
@@ -55,13 +56,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       context: context,
                       message: state.error,
                     );
-                  } else if (state is SuccessAuthState) {
-                    customSnackBar(
-                      context: context,
-                      message: 'Success Register',
+                  } else if (state is CreateUserSuccessState) {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      HomeScreen.routeName,
                     );
-                  }
-                  else if (state is LoadingAuthState){
+                  } else if (state is LoadingAuthState) {
                     customSnackBar(
                       context: context,
                       message: 'Loading',
@@ -147,6 +147,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               BlocProvider.of<AuthCubit>(context).register(
                                 email: email!,
                                 password: password!,
+                                name: name!,
+                                phone: phone!,
                               );
                             }
                           },

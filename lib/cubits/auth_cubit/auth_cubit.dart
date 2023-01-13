@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/models/user_model.dart';
 
 import 'auth_states.dart';
 
@@ -30,18 +32,24 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> register({
     required String email,
     required String password,
+    required String name,
+    required String phone,
   }) async {
     emit(
       LoadingAuthState(),
     );
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      emit(
-        SuccessAuthState(),
+      createUser(
+        name: name,
+        phone: phone,
+        email: email,
+        userId: userCredential.user!.uid,
       );
+
     } on FirebaseAuthException catch (error) {
       if (error.code == 'weak-password') {
         emit(
@@ -100,6 +108,31 @@ class AuthCubit extends Cubit<AuthState> {
           error: 'Something went wrong',
         ),
       );
+    }
+  }
+
+  void createUser({
+    required String name,
+    required String phone,
+    required String email,
+    required String userId,
+  }) {
+    UserModel user = UserModel(
+      name: name,
+      email: email,
+      phone: phone,
+      userId: userId,
+    );
+    try {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .set(user.toMap());
+      emit(CreateUserSuccessState());
+    } catch (error) {
+      emit(CreateUserErrorState(
+        error: error.toString(),
+      ));
     }
   }
 }

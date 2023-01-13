@@ -16,3 +16,12 @@ class ErrorAuthState extends AuthState {
 
 class PasswordVisibilityAuthState extends AuthState {}
 
+class CreateUserSuccessState extends AuthState {}
+
+class CreateUserErrorState extends AuthState {
+  final String error;
+
+  CreateUserErrorState({
+    required this.error,
+  });
+}

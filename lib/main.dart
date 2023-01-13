@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:social_app/screens/auth_screens/login_screen.dart';
 import 'package:social_app/screens/auth_screens/register_screen.dart';
+import 'package:social_app/screens/home_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -27,6 +28,7 @@ class SocialApp extends StatelessWidget {
         routes: {
           LoginScreen.routeName : (context) => const LoginScreen(),
           RegisterScreen.routeName : (context) => const RegisterScreen(),
+          HomeScreen.routeName : (context) => const HomeScreen(),
         },
         theme: ThemeData(
           brightness: Brightness.dark,
