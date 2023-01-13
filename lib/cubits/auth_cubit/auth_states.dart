@@ -4,7 +4,13 @@ class InitialAuthState extends AuthState {}
 
 class LoadingAuthState extends AuthState {}
 
-class SuccessAuthState extends AuthState {}
+class SuccessAuthState extends AuthState {
+  final String userId;
+
+  SuccessAuthState({
+    required this.userId,
+  });
+}
 
 class ErrorAuthState extends AuthState {
   final String error;

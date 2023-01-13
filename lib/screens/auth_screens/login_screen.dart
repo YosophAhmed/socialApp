@@ -3,12 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:social_app/screens/auth_screens/register_screen.dart';
+import 'package:social_app/screens/home_screen.dart';
 import 'package:social_app/widgets/custom_botton.dart';
 import 'package:social_app/widgets/custom_divider.dart';
 import 'package:social_app/widgets/custom_snackbar.dart';
 
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/auth_cubit/auth_states.dart';
+import '../../local/cache.dart';
 import '../../widgets/custom_text_form_field.dart';
 import '../../widgets/custom_top_image.dart';
 
@@ -53,10 +55,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       message: 'Loading',
                     );
                   } else if (state is SuccessAuthState) {
-                    customSnackBar(
-                      context: context,
-                      message: 'Success Login',
-                    );
+                    CacheHelper.saveCacheData(
+                      key: 'userId',
+                      value: state.userId,
+                    ).then((value) {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        HomeScreen.routeName,
+                      );
+                    });
                   } else if (state is ErrorAuthState) {
                     customSnackBar(
                       context: context,

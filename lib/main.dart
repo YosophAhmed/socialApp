@@ -5,12 +5,16 @@ import 'package:social_app/screens/auth_screens/login_screen.dart';
 import 'package:social_app/screens/auth_screens/register_screen.dart';
 import 'package:social_app/screens/home_screen.dart';
 import 'firebase_options.dart';
+import 'local/cache.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await CacheHelper.init();
+  var userId = CacheHelper.getCacheData(key: 'userId');
+
   runApp(
     const SocialApp(),
   );

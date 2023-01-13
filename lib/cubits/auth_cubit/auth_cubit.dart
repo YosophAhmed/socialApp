@@ -39,7 +39,8 @@ class AuthCubit extends Cubit<AuthState> {
       LoadingAuthState(),
     );
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -49,7 +50,6 @@ class AuthCubit extends Cubit<AuthState> {
         email: email,
         userId: userCredential.user!.uid,
       );
-
     } on FirebaseAuthException catch (error) {
       if (error.code == 'weak-password') {
         emit(
@@ -81,12 +81,15 @@ class AuthCubit extends Cubit<AuthState> {
       LoadingAuthState(),
     );
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       emit(
-        SuccessAuthState(),
+        SuccessAuthState(
+          userId: userCredential.user!.uid,
+        ),
       );
     } on FirebaseAuthException catch (error) {
       if (error.code == 'user-not-found') {
