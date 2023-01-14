@@ -13,3 +13,5 @@ class GetUserErrorState extends AppStates {
     required this.errorMessage,
   });
 }
+
+class ChangeBottomNavBarState extends AppStates {}

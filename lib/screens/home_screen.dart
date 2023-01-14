@@ -1,15 +1,10 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:social_app/cubits/app_cubit/app_cubit.dart';
 import 'package:social_app/cubits/app_cubit/app_states.dart';
-import 'package:social_app/models/user_model.dart';
-import 'package:social_app/widgets/custom_circular_progress_indicator.dart';
-import 'package:social_app/widgets/custom_verification.dart';
 
-import '../widgets/custom_snackbar.dart';
+import '../styles/icon_broken.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = 'HomeScreen';
@@ -23,41 +18,95 @@ class HomeScreen extends StatelessWidget {
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
+          var cubit = AppCubit.get(context);
           return Scaffold(
-            body: ConditionalBuilder(
-              condition: AppCubit.get(context).user != null,
-              builder: (context) {
-                UserModel user = AppCubit.get(context).user!;
-                if (!user.isEmailVerified) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      top: 7.h,
-                      left: 2.w,
-                      right: 2.w,
+            appBar: AppBar(
+              title: Text(
+                cubit.titles[cubit.currentIndex],
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.sp,
+                ),
+              ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: (){},
+                    child: Container(
+                      height: 7.h,
+                      width: 7.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(10.sp),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          IconBroken.Notification,
+                          size: 28.sp,
+                        ),
+                      ),
                     ),
-                    child: CustomVerification(
-                      onPressed: () {
-                        FirebaseAuth.instance.currentUser!
-                            .sendEmailVerification()
-                            .then((value) {
-                          customSnackBar(
-                            context: context,
-                            message: 'Check your email',
-                          );
-                        }).catchError((error) {});
-                      },
-                    ),
-                  );
-                }
-                return const Center();
-              },
-              fallback: (context) {
-                return const Center(
-                  child: CustomCircularProgressIndicator(
-                    color: Colors.blueAccent,
                   ),
-                );
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: (){},
+                    child: Container(
+                      height: 7.h,
+                      width: 7.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(10.sp),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          IconBroken.Search,
+                          size: 28.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              elevation: 0.0,
+              backgroundColor: Colors.transparent,
+            ),
+            body: cubit.screens[cubit.currentIndex],
+            bottomNavigationBar: BottomNavigationBar(
+              selectedItemColor: Colors.blueAccent,
+              unselectedItemColor: Colors.grey,
+              currentIndex: cubit.currentIndex,
+              onTap: (index) {
+                cubit.changeBottomBar(index);
               },
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    IconBroken.Home,
+                  ),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    IconBroken.Chat,
+                  ),
+                  label: 'Chats',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    IconBroken.Location,
+                  ),
+                  label: 'Users',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    IconBroken.Setting,
+                  ),
+                  label: 'Settings',
+                ),
+              ],
             ),
           );
         },
@@ -65,3 +114,39 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+// body: ConditionalBuilder(
+//   condition: AppCubit.get(context).user != null,
+//   builder: (context) {
+//     UserModel user = AppCubit.get(context).user!;
+//     if (!user.isEmailVerified) {
+//       return Padding(
+//         padding: EdgeInsets.only(
+//           top: 7.h,
+//           left: 2.w,
+//           right: 2.w,
+//         ),
+//         child: CustomVerification(
+//           onPressed: () {
+//             FirebaseAuth.instance.currentUser!
+//                 .sendEmailVerification()
+//                 .then((value) {
+//               customSnackBar(
+//                 context: context,
+//                 message: 'Check your email',
+//               );
+//             }).catchError((error) {});
+//           },
+//         ),
+//       );
+//     }
+//     return const Center();
+//   },
+//   fallback: (context) {
+//     return const Center(
+//       child: CustomCircularProgressIndicator(
+//         color: Colors.blueAccent,
+//       ),
+//     );
+//   },
+// ),
