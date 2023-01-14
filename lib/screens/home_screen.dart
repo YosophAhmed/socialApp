@@ -75,7 +75,7 @@ class HomeScreen extends StatelessWidget {
             ),
             body: cubit.screens[cubit.currentIndex],
             bottomNavigationBar: BottomNavigationBar(
-              selectedItemColor: Colors.blueAccent,
+              selectedItemColor: Colors.white,
               unselectedItemColor: Colors.grey,
               currentIndex: cubit.currentIndex,
               onTap: (index) {
