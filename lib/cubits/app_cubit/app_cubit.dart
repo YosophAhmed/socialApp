@@ -9,23 +9,22 @@ class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialAppState());
   static AppCubit get(context) => BlocProvider.of(context);
 
-  late UserModel user;
+  UserModel? user;
 
-  void getUserData() async {
+  void getUserData() {
     emit(GetUserLoadingState());
-    try {
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-          .instance
-          .collection('users')
-          .doc(CacheHelper.getCacheData(key: 'userId'))
-          .get();
-      user = UserModel.fromJson(snapshot.data()!);
 
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(CacheHelper.getCacheData(key: 'userId'))
+        .get()
+        .then((value) {
+      user = UserModel.fromJson(value.data()!);
       emit(GetUserSuccessState());
-    } catch (error) {
+    }).catchError((error) {
       emit(
         GetUserErrorState(errorMessage: error.toString()),
       );
-    }
+    });
   }
 }
