@@ -37,6 +37,7 @@ class SocialApp extends StatelessWidget {
         theme: ThemeData(
           brightness: Brightness.dark,
           fontFamily: 'Roboto',
+          primarySwatch: Colors.grey,
         ),
       );
     });
