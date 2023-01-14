@@ -23,7 +23,7 @@ class FeedScreen extends StatelessWidget {
                 children: [
                   CustomCardTop(),
                   const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    padding: EdgeInsets.symmetric(vertical: 1.0),
                     child: CustomDivider(
                       text: '',
                     ),
@@ -39,21 +39,6 @@ class FeedScreen extends StatelessWidget {
                       CustomTag(
                         tag: '#Peaky',
                       ),
-                      CustomTag(
-                        tag: '#Blinders',
-                      ),
-                      CustomTag(
-                        tag: '#Series',
-                      ),
-                      CustomTag(
-                        tag: '#Favourite_show',
-                      ),
-                      CustomTag(
-                        tag: '#Clilian_Murphy',
-                      ),
-                      CustomTag(
-                        tag: '#Best_Actor',
-                      ),
                     ],
                   ),
                   Card(
@@ -65,6 +50,45 @@ class FeedScreen extends StatelessWidget {
                       height: 25.h,
                       width: double.infinity,
                     ),
+                  ),
+                  Row(
+                    children: [
+                      CustomLikeButton(
+                        onTap: () {},
+                      ),
+                      const Spacer(),
+                      CustomCommentButton(
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.5),
+                    child: CustomDivider(
+                      text: '',
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          right: 60,
+                        ),
+                        child: CircleAvatar(
+                          radius: 20.0,
+                          backgroundImage: NetworkImage(
+                            'https://i.ytimg.com/vi/HOtc0TQ7WBU/maxresdefault.jpg',
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'Write a comment ...',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -149,23 +173,82 @@ class CustomTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 20.0,
-      child: Padding(
-        padding: EdgeInsets.only(
-          right: 1.w,
+    return GestureDetector(
+      child: Text(
+        '#Peaky',
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 14.sp,
         ),
-        child: MaterialButton(
-          padding: EdgeInsets.zero,
-          onPressed: () {},
-          child: Text(
-            tag,
+      ),
+    );
+  }
+}
+
+class CustomLikeButton extends StatelessWidget {
+  final Function() onTap;
+  const CustomLikeButton({
+    Key? key,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(
+            IconBroken.Heart,
+            color: Colors.red,
+            size: 18.sp,
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          Text(
+            '1200',
             style: TextStyle(
+              color: Colors.grey,
               fontSize: 14.sp,
-              color: Colors.blue,
             ),
           ),
-        ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomCommentButton extends StatelessWidget {
+  final Function() onTap;
+
+  const CustomCommentButton({
+    Key? key,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(
+            IconBroken.Chat,
+            color: Colors.amber,
+            size: 18.sp,
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          Text(
+            '500 Comments',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 14.sp,
+            ),
+          ),
+        ],
       ),
     );
   }
