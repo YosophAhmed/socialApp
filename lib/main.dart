@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:social_app/screens/add_post_screen.dart';
 import 'package:social_app/screens/auth_screens/login_screen.dart';
 import 'package:social_app/screens/auth_screens/register_screen.dart';
 import 'package:social_app/screens/home_screen.dart';
@@ -13,7 +14,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await CacheHelper.init();
-  var userId = CacheHelper.getCacheData(key: 'userId');
+  // var userId = CacheHelper.getCacheData(key: 'userId');
 
   runApp(
     const SocialApp(),
@@ -33,6 +34,7 @@ class SocialApp extends StatelessWidget {
           LoginScreen.routeName : (context) => const LoginScreen(),
           RegisterScreen.routeName : (context) => const RegisterScreen(),
           HomeScreen.routeName : (context) => const HomeScreen(),
+          AddPostScreen.routeName : (context) => const AddPostScreen(),
         },
         theme: ThemeData(
           brightness: Brightness.dark,

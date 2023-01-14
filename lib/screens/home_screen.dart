@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:social_app/cubits/app_cubit/app_cubit.dart';
 import 'package:social_app/cubits/app_cubit/app_states.dart';
+import 'package:social_app/screens/add_post_screen.dart';
 
 import '../styles/icon_broken.dart';
 
@@ -96,15 +97,21 @@ class HomeScreen extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
+                    IconBroken.Paper_Upload,
+                  ),
+                  label: 'Post',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
                     IconBroken.Location,
                   ),
                   label: 'Users',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    IconBroken.Setting,
+                    IconBroken.Profile,
                   ),
-                  label: 'Settings',
+                  label: 'Profile',
                 ),
               ],
             ),

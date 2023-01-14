@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/models/user_model.dart';
+import 'package:social_app/screens/add_post_screen.dart';
 import 'package:social_app/screens/chat_screen.dart';
 import 'package:social_app/screens/feed_screen.dart';
 import 'package:social_app/screens/settings_screen.dart';
@@ -13,7 +14,7 @@ import 'app_states.dart';
 class AppCubit extends Cubit<AppStates> {
   static AppCubit get(context) => BlocProvider.of(context);
 
-  UserModel? user;
+  late UserModel user;
 
   AppCubit() : super(InitialAppState());
 
@@ -39,6 +40,7 @@ class AppCubit extends Cubit<AppStates> {
   List<Widget> screens = const [
     FeedScreen(),
     ChatScreen(),
+    AddPostScreen(),
     UsersScreen(),
     SettingsScreen(),
   ];
@@ -48,10 +50,11 @@ class AppCubit extends Cubit<AppStates> {
     emit(ChangeBottomNavBarState());
   }
 
-  List<String> titles = [
-    'News Feed',
+  List<String> titles = const [
+    'Home',
     'Chats',
+    'Add post',
     'Users',
-    'Settings',
+    'Profile',
   ];
 }

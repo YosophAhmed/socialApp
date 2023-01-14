@@ -125,6 +125,9 @@ class AuthCubit extends Cubit<AuthState> {
       email: email,
       phone: phone,
       userId: userId,
+      image: '',
+      coverImage: '',
+      bio: '',
     );
     try {
       FirebaseFirestore.instance
