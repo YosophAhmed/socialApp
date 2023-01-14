@@ -86,6 +86,9 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
+    - family: IconBroken
+      fonts:
+        - asset: assets/fonts/icons.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
 
