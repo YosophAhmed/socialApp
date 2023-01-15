@@ -4,8 +4,10 @@ import 'package:sizer/sizer.dart';
 import 'package:social_app/cubits/app_cubit/app_cubit.dart';
 import 'package:social_app/cubits/app_cubit/app_states.dart';
 import 'package:social_app/models/user_model.dart';
-import 'package:social_app/widgets/custom_botton.dart';
 import 'package:social_app/widgets/custom_circle_avatar.dart';
+import 'package:social_app/widgets/custom_icon.dart';
+
+import '../styles/icon_broken.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -21,7 +23,7 @@ class SettingsScreen extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                height: 32.h,
+                height: 42.h,
                 child: Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
@@ -41,6 +43,43 @@ class SettingsScreen extends StatelessWidget {
                     CustomCircleAvatar(
                       imageName: userModel.image,
                     ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(32),
+                          color: Colors.blue,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(
+                            IconBroken.Edit,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                          onPressed: () {},
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 120),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(32),
+                            color: Colors.blue,
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              IconBroken.Edit,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -49,12 +88,26 @@ class SettingsScreen extends StatelessWidget {
                   top: 2.h,
                   bottom: 1.h,
                 ),
-                child: Text(
-                  userModel.name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22.sp,
-                  ),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 25.w,
+                    ),
+                    Text(
+                      userModel.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22.sp,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    const Icon(
+                      Icons.check_circle,
+                      color: Colors.blue,
+                    ),
+                  ],
                 ),
               ),
               Text(
@@ -65,13 +118,20 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
-                height: 5.h,
-              ),
-              CustomButton(
-                onTap: () {},
-                label: 'Edit Profile',
-                buttonWidth: 40.w,
+              Container(
+                margin: EdgeInsets.only(top: 2.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(32),
+                  color: Colors.blue,
+                ),
+                child: IconButton(
+                  icon: const Icon(
+                    IconBroken.Edit,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  onPressed: () {},
+                ),
               ),
             ],
           ),
