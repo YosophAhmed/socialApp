@@ -50,13 +50,13 @@ class CustomSocialPost extends StatelessWidget {
             ),
             Row(
               children: [
+                CustomCommentButton(
+                  onTap: () {},
+                ),
+                const Spacer(),
                 CustomLikeButton(
                   onTap: () {},
                   text: '1200',
-                ),
-                const Spacer(),
-                CustomCommentButton(
-                  onTap: () {},
                 ),
               ],
             ),
@@ -80,7 +80,7 @@ class CustomSocialPost extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: (){},
+                  onTap: () {},
                   child: Text(
                     'Write a comment ...',
                     style: TextStyle(
@@ -102,7 +102,6 @@ class CustomSocialPost extends StatelessWidget {
     );
   }
 }
-
 
 class CustomCardTop extends StatelessWidget {
   const CustomCardTop({Key? key}) : super(key: key);

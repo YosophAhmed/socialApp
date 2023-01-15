@@ -4,8 +4,12 @@ import 'package:sizer/sizer.dart';
 import 'package:social_app/cubits/app_cubit/app_cubit.dart';
 import 'package:social_app/cubits/app_cubit/app_states.dart';
 import 'package:social_app/models/user_model.dart';
+import 'package:social_app/widgets/custom_botton.dart';
 import 'package:social_app/widgets/custom_circle_avatar.dart';
 import 'package:social_app/widgets/custom_icon.dart';
+import 'package:social_app/widgets/custom_modal_bottom_sheet.dart';
+import 'package:social_app/widgets/custom_text_field.dart';
+import 'package:social_app/widgets/custom_text_form_field.dart';
 
 import '../styles/icon_broken.dart';
 
@@ -18,16 +22,18 @@ class SettingsScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         UserModel userModel = AppCubit.get(context).user;
+        var bioController = TextEditingController();
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 2.w),
           child: Column(
             children: [
               SizedBox(
-                height: 42.h,
+                height: 37.h,
                 child: Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
                     Align(
+                      alignment: Alignment.topCenter,
                       child: Card(
                         clipBehavior: Clip.antiAliasWithSaveLayer,
                         margin: const EdgeInsets.symmetric(vertical: 10),
@@ -38,7 +44,6 @@ class SettingsScreen extends StatelessWidget {
                           width: double.infinity,
                         ),
                       ),
-                      alignment: Alignment.topCenter,
                     ),
                     CustomCircleAvatar(
                       imageName: userModel.image,
@@ -46,13 +51,14 @@ class SettingsScreen extends StatelessWidget {
                     Align(
                       alignment: Alignment.topRight,
                       child: Container(
+                        margin: const EdgeInsets.only(top: 10,),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(32),
                           color: Colors.blue,
                         ),
                         child: IconButton(
                           icon: const Icon(
-                            IconBroken.Edit,
+                            IconBroken.Image_2,
                             color: Colors.white,
                             size: 30,
                           ),
@@ -71,7 +77,7 @@ class SettingsScreen extends StatelessWidget {
                           ),
                           child: IconButton(
                             icon: const Icon(
-                              IconBroken.Edit,
+                              IconBroken.Image,
                               color: Colors.white,
                               size: 30,
                             ),
@@ -130,7 +136,55 @@ class SettingsScreen extends StatelessWidget {
                     color: Colors.white,
                     size: 30,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (context) {
+                        return SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              left: 2.w,
+                              right: 2.w,
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 3.h,
+                                ),
+                                CustomTextField(
+                                  controller: bioController,
+                                  hintText: userModel.bio,
+                                  onChanged: (value) {},
+                                  onSaved: (value) {
+
+                                  },
+                                  maxLines: 7,
+                                ),
+                                SizedBox(
+                                  height: 5.h,
+                                ),
+                                CustomButton(
+                                  label: 'Save',
+                                  onTap: () {
+
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 3.h,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.sp),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
