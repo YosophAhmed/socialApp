@@ -15,3 +15,10 @@ class GetUserErrorState extends AppStates {
 }
 
 class ChangeBottomNavBarState extends AppStates {}
+
+class SelectImageState extends AppStates {}
+
+class ChangeBioState extends AppStates {}
+
+
+

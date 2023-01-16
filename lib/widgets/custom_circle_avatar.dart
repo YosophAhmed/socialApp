@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class CustomCircleAvatar extends StatelessWidget {
-  final String imageName;
+  File imageName;
 
-  const CustomCircleAvatar({
+  CustomCircleAvatar({
     Key? key,
     required this.imageName,
   }) : super(key: key);
@@ -17,7 +19,7 @@ class CustomCircleAvatar extends StatelessWidget {
       child: CircleAvatar(
         radius: 57.sp,
         backgroundImage: NetworkImage(
-          imageName,
+          imageName.path,
         ),
       ),
     );
