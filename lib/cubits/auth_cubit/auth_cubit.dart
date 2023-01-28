@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/cache/cache_helper.dart';
+import 'package:social_app/constants/constants.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/styles/icon_broken.dart';
 import 'auth_states.dart';
@@ -109,11 +111,13 @@ class AuthCubit extends Cubit<AuthState> {
         email: email,
         password: password,
       );
+      userID = userCredential.user!.uid;
+      CacheHelper.saveCacheData(key: 'userId', value: userID);
       createUser(
         name: name,
         phone: phone,
         email: email,
-        userId: userCredential.user!.uid,
+        userId: userID!,
       );
     } on FirebaseAuthException catch (error) {
       if (error.code == 'weak-password') {
