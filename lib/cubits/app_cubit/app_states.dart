@@ -36,3 +36,14 @@ class ErrorUpdateBioState extends AppStates {
   });
 }
 
+class LoadingAddPostState extends AppStates {}
+
+class SuccessAddPostState extends AppStates {}
+
+class ErrorAddPostState extends AppStates {
+  final String errorMessage;
+
+  ErrorAddPostState({
+    required this.errorMessage,
+  });
+}

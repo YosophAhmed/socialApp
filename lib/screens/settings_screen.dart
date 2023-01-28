@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -23,8 +21,6 @@ class SettingsScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = AppCubit.get(context);
         UserModel? userModel = cubit.userModel;
-        File? profileImage = cubit.profileImage;
-        File? coverImage = cubit.coverImage;
         var bioController = TextEditingController();
 
         return Padding(
@@ -57,30 +53,27 @@ class SettingsScreen extends StatelessWidget {
                           height: 22.h,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: coverImage == null
-                                  ? const AssetImage(
-                                      'assets/images/default_cover.jpg',
-                                    )
-                                  : FileImage(coverImage)
-                                      as ImageProvider<Object>,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: Image(
+                            image: userModel?.coverImage == '' ? const AssetImage('assets/images/default_cover.jpg') :
+                            NetworkImage(userModel!.coverImage) as ImageProvider<Object>,
+                            fit: BoxFit.fill,
                           ),
                         ),
                       ),
-                      CircleAvatar(
-                        radius: 60.sp,
-                        backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                          radius: 57.sp,
-                          backgroundImage: profileImage == null
-                              ? const AssetImage(
-                                  'assets/images/default_profile.jpg',
-                                )
-                              : FileImage(profileImage)
-                                  as ImageProvider<Object>?,
+                      Container(
+                        height: 20.h,
+                        width: 20.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Image(
+                          image: userModel?.image == '' ? const AssetImage('assets/images/default_profile.jpg') :
+                          NetworkImage(userModel!.image) as ImageProvider<Object>,
+                          fit: BoxFit.fill,
                         ),
                       ),
                       Align(
@@ -215,10 +208,9 @@ class SettingsScreen extends StatelessWidget {
                     bottom: 1.h,
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: 25.w,
-                      ),
+
                       Text(
                         userModel!.name,
                         style: TextStyle(

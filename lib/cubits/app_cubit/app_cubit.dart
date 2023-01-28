@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/constants/constants.dart';
+import 'package:social_app/models/post_model.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/screens/add_post_screen.dart';
 import 'package:social_app/screens/chat_screen.dart';
@@ -90,9 +91,13 @@ class AppCubit extends Cubit<AppStates> {
             .child('users/${Uri.file(coverImage!.path).pathSegments.last}')
             .putFile(coverImage!);
         coverImageUrl = await value.ref.getDownloadURL();
-        await FirebaseFirestore.instance.collection('users').doc(userID).update({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userID)
+            .update({
           'coverImage': coverImageUrl,
         });
+        getUserData();
       } else {
         profileImage = File(imageFile.path);
         var value = await firebase_storage.FirebaseStorage.instance
@@ -100,9 +105,13 @@ class AppCubit extends Cubit<AppStates> {
             .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
             .putFile(profileImage!);
         profileImageUrl = await value.ref.getDownloadURL();
-        await FirebaseFirestore.instance.collection('users').doc(userID).update({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userID)
+            .update({
           'image': profileImageUrl,
         });
+        getUserData();
       }
       emit(SelectImageState());
     } else {
@@ -111,7 +120,9 @@ class AppCubit extends Cubit<AppStates> {
         message: 'No Image Selected',
       );
       emit(
-        ErrorSelectImageState(errorMessage: 'No Image Selected'),
+        ErrorSelectImageState(
+          errorMessage: 'No Image Selected',
+        ),
       );
     }
   }
@@ -131,4 +142,58 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  File? postImage;
+  String? postImageUrl;
+
+  Future<void> selectPostImage({
+    required BuildContext context,
+    required String selectionType,
+  }) async {
+    final imageFile = await ImagePicker().pickImage(
+      source:
+          selectionType == 'Camera' ? ImageSource.camera : ImageSource.gallery,
+      maxWidth: 600,
+    );
+    emit(SelectImageLoadingState());
+    if (imageFile != null) {
+      postImage = File(imageFile.path);
+      var value = await firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child('posts/${Uri.file(postImage!.path).pathSegments.last}')
+          .putFile(postImage!);
+      postImageUrl = await value.ref.getDownloadURL();
+      emit(SelectImageState());
+    } else {
+      customSnackBar(
+        context: context,
+        message: 'No Image Selected',
+      );
+      emit(
+        ErrorSelectImageState(
+          errorMessage: 'No Image Selected',
+        ),
+      );
+    }
+  }
+
+  Future<void> addPost({
+    required String postText,
+  }) async {
+    emit(LoadingAddPostState());
+    try {
+      await FirebaseFirestore.instance.collection('posts').doc(userID).set({
+        'userId': userID,
+        // 'postId': postId,
+        'dateTime': DateTime.now().toString().substring(0, 12),
+        'postText': postText,
+        'postImage': postImageUrl ?? '',
+      });
+    } catch (error) {
+      emit(
+        ErrorAddPostState(
+          errorMessage: error.toString(),
+        ),
+      );
+    }
+  }
 }
