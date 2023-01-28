@@ -49,8 +49,8 @@ class SettingsScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: coverImage == null
-                                  ? NetworkImage(
-                                      userModel!.coverImage,
+                                  ? const AssetImage(
+                                      'assets/images/default_cover.jpg',
                                     )
                                   : FileImage(coverImage)
                                       as ImageProvider<Object>,
@@ -66,7 +66,9 @@ class SettingsScreen extends StatelessWidget {
                         child: CircleAvatar(
                           radius: 57.sp,
                           backgroundImage: profileImage == null
-                              ? NetworkImage(userModel!.image)
+                              ? const AssetImage(
+                                  'assets/images/default_profile.jpg',
+                                )
                               : FileImage(profileImage)
                                   as ImageProvider<Object>?,
                         ),
@@ -229,7 +231,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  userModel.bio,
+                  userModel.bio == '' ? 'Add your bio' : userModel.bio,
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 12.sp,
