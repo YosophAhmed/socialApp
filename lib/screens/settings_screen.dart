@@ -36,6 +36,16 @@ class SettingsScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                if (state is SelectImageLoadingState)
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 2.h,
+                    ),
+                    child: const LinearProgressIndicator(
+                      backgroundColor: Colors.grey,
+                      color: Colors.lightBlue,
+                    ),
+                  ),
                 SizedBox(
                   height: 37.h,
                   child: Stack(
@@ -102,7 +112,6 @@ class SettingsScreen extends StatelessWidget {
                                             imageType: 'Cover',
                                             selectionType: 'Camera',
                                           );
-                                          cubit.updateUserData();
                                           Navigator.pop(context);
                                         },
                                       ),
@@ -123,7 +132,6 @@ class SettingsScreen extends StatelessWidget {
                                             imageType: 'Cover',
                                             selectionType: 'Gallery',
                                           );
-                                          cubit.updateUserData();
                                           Navigator.pop(context);
                                         },
                                       ),
@@ -166,7 +174,6 @@ class SettingsScreen extends StatelessWidget {
                                               imageType: 'Profile',
                                               selectionType: 'Camera',
                                             );
-                                            cubit.updateUserData();
                                             Navigator.pop(context);
                                           },
                                         ),
@@ -187,7 +194,6 @@ class SettingsScreen extends StatelessWidget {
                                               imageType: 'Profile',
                                               selectionType: 'Gallery',
                                             );
-                                            cubit.updateUserData();
                                             Navigator.pop(context);
                                           },
                                         ),
@@ -238,75 +244,64 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                Container(
-                  margin: EdgeInsets.only(top: 1.h),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32),
-                    color: Colors.transparent,
+                IconButton(
+                  icon: const Icon(
+                    IconBroken.Edit,
+                    color: Colors.white,
+                    size: 30,
                   ),
-                  child: IconButton(
-                    icon: const Icon(
-                      IconBroken.Edit,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (context) {
-                          return SingleChildScrollView(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                left: 2.w,
-                                right: 2.w,
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom,
-                              ),
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 3.h,
-                                  ),
-                                  CustomTextField(
-                                    controller: bioController,
-                                    hintText: userModel.bio,
-                                    onChanged: (value) {},
-                                    onSaved: (value) {
-                                      userModel.bio = bioController.text;
-                                      Navigator.pop(context);
-                                    },
-                                    maxLines: 7,
-                                  ),
-                                  SizedBox(
-                                    height: 5.h,
-                                  ),
-                                  CustomButton(
-                                    label: 'Save',
-                                    onTap: () {
-                                      // if (bioController.text != '') {
-                                      //   cubit.changeBio(
-                                      //     newBio: bioController.text,
-                                      //   );
-                                      //   cubit.updateUserData();
-                                      // }
-                                      // Navigator.pop(context);
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: 3.h,
-                                  ),
-                                ],
-                              ),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.sp),
+                      ),
+                      builder: (context) {
+                        return SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: 4.h,
+                              left: 2.w,
+                              right: 2.w,
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
                             ),
-                          );
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.sp),
-                        ),
-                      );
-                    },
-                  ),
+                            child: Column(
+                              children: [
+                                CustomTextField(
+                                  controller: bioController,
+                                  hintText: userModel.bio,
+                                  onChanged: (value) {},
+                                  onSaved: (value) {
+                                    if (bioController.text != '') {
+                                      cubit.updateBio(bio: bioController.text);
+                                    }
+                                    Navigator.pop(context);
+                                  },
+                                  maxLines: 3,
+                                ),
+                                SizedBox(
+                                  height: 5.h,
+                                ),
+                                CustomButton(
+                                  label: 'Save',
+                                  onTap: () {
+                                    if (bioController.text != '') {
+                                      cubit.updateBio(bio: bioController.text);
+                                    }
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 3.h,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),

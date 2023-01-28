@@ -18,7 +18,21 @@ class ChangeBottomNavBarState extends AppStates {}
 
 class SelectImageState extends AppStates {}
 
-class ChangeBioState extends AppStates {}
+class SelectImageLoadingState extends AppStates {}
 
+class ErrorSelectImageState extends AppStates {
+  final String errorMessage;
 
+  ErrorSelectImageState({
+    required this.errorMessage,
+  });
+}
+
+class ErrorUpdateBioState extends AppStates {
+  final String errorMessage;
+
+  ErrorUpdateBioState({
+    required this.errorMessage,
+  });
+}
 

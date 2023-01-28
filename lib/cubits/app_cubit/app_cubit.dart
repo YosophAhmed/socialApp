@@ -12,7 +12,6 @@ import 'package:social_app/screens/feed_screen.dart';
 import 'package:social_app/screens/settings_screen.dart';
 import 'package:social_app/screens/users_screen.dart';
 
-import '../../cache/cache_helper.dart';
 import '../../widgets/custom_snackbar.dart';
 import 'app_states.dart';
 
@@ -71,7 +70,6 @@ class AppCubit extends Cubit<AppStates> {
   File? coverImage;
   String coverImageUrl = '';
   String profileImageUrl = '';
-  String bio = '';
 
   Future<void> selectImage({
     required BuildContext context,
@@ -83,6 +81,7 @@ class AppCubit extends Cubit<AppStates> {
           selectionType == 'Camera' ? ImageSource.camera : ImageSource.gallery,
       maxWidth: 600,
     );
+    emit(SelectImageLoadingState());
     if (imageFile != null) {
       if (imageType == 'Cover') {
         coverImage = File(imageFile.path);
@@ -91,6 +90,9 @@ class AppCubit extends Cubit<AppStates> {
             .child('users/${Uri.file(coverImage!.path).pathSegments.last}')
             .putFile(coverImage!);
         coverImageUrl = await value.ref.getDownloadURL();
+        await FirebaseFirestore.instance.collection('users').doc(userID).update({
+          'coverImage': coverImageUrl,
+        });
       } else {
         profileImage = File(imageFile.path);
         var value = await firebase_storage.FirebaseStorage.instance
@@ -98,6 +100,9 @@ class AppCubit extends Cubit<AppStates> {
             .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
             .putFile(profileImage!);
         profileImageUrl = await value.ref.getDownloadURL();
+        await FirebaseFirestore.instance.collection('users').doc(userID).update({
+          'image': profileImageUrl,
+        });
       }
       emit(SelectImageState());
     } else {
@@ -105,27 +110,25 @@ class AppCubit extends Cubit<AppStates> {
         context: context,
         message: 'No Image Selected',
       );
+      emit(
+        ErrorSelectImageState(errorMessage: 'No Image Selected'),
+      );
     }
   }
 
-  void updateUserData() {
-    UserModel updatedUser = UserModel(
-      email: userModel!.email,
-      name: userModel!.name,
-      phone: userModel!.phone,
-      userId: userModel!.userId,
-      image: profileImageUrl,
-      coverImage: coverImageUrl,
-      bio: bio,
-    );
-    if (coverImageUrl.isNotEmpty && profileImageUrl.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(userModel!.userId)
-          .update(updatedUser.toMap())
-          .then((value) {
-        getUserData();
-      }).catchError((error) {});
+  Future<void> updateBio({
+    required String bio,
+  }) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(userID).update({
+        'bio': bio,
+      });
+      getUserData();
+    } catch (error) {
+      emit(ErrorUpdateBioState(
+        errorMessage: error.toString(),
+      ));
     }
   }
+
 }

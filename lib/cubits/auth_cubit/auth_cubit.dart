@@ -40,6 +40,9 @@ class AuthCubit extends Cubit<AuthState> {
         email: email,
         password: password,
       );
+      userID = userCredential.user!.uid;
+      CacheHelper.saveCacheData(key: 'userId', value: userID);
+
       emit(
         SuccessAuthState(
           userId: userCredential.user!.uid,
