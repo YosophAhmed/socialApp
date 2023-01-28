@@ -72,7 +72,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   return Form(
                     key: BlocProvider.of<AuthCubit>(context).formKey,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                      ),
                       child: Column(children: [
                         SizedBox(
                           height: 5.h,
@@ -165,8 +167,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         CustomButton(
                           label: 'Login to your account',
                           onTap: () {
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                LoginScreen.routeName, (route) => false);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              LoginScreen.routeName,
+                            );
                           },
                           buttonColor: Colors.green,
                           buttonWidth: 60.w,

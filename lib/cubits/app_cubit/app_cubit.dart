@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_app/constants/constants.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/screens/add_post_screen.dart';
 import 'package:social_app/screens/chat_screen.dart';
@@ -11,7 +12,7 @@ import 'package:social_app/screens/feed_screen.dart';
 import 'package:social_app/screens/settings_screen.dart';
 import 'package:social_app/screens/users_screen.dart';
 
-import '../../local/cache.dart';
+import '../../cache/cache_helper.dart';
 import '../../widgets/custom_snackbar.dart';
 import 'app_states.dart';
 
@@ -20,26 +21,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 class AppCubit extends Cubit<AppStates> {
   static AppCubit get(context) => BlocProvider.of(context);
 
-  late UserModel user;
-
   AppCubit() : super(InitialAppState());
-
-  void getUserData() {
-    emit(GetUserLoadingState());
-
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(CacheHelper.getCacheData(key: 'userId'))
-        .get()
-        .then((value) {
-      user = UserModel.fromJson(value.data()!);
-      emit(GetUserSuccessState());
-    }).catchError((error) {
-      emit(
-        GetUserErrorState(errorMessage: error.toString()),
-      );
-    });
-  }
 
   int currentIndex = 0;
 
@@ -63,6 +45,27 @@ class AppCubit extends Cubit<AppStates> {
     'Users',
     'My Profile',
   ];
+
+  UserModel? userModel;
+  void getUserData() {
+    emit(GetUserLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userID)
+        .get()
+        .then((value) {
+      userModel = UserModel.fromJson(
+        value.data()!,
+      );
+      emit(GetUserSuccessState());
+    }).catchError((error) {
+      emit(
+        GetUserErrorState(
+          errorMessage: error.toString(),
+        ),
+      );
+    });
+  }
 
   File? profileImage;
   File? coverImage;
@@ -105,28 +108,24 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  void changeBio({required String newBio}) {
-    user.bio = newBio;
-    bio = newBio;
-    emit(ChangeBioState());
-  }
-
   void updateUserData() {
     UserModel updatedUser = UserModel(
-      email: user.email,
-      name: user.name,
-      phone: user.phone,
-      userId: user.userId,
+      email: userModel!.email,
+      name: userModel!.name,
+      phone: userModel!.phone,
+      userId: userModel!.userId,
       image: profileImageUrl,
       coverImage: coverImageUrl,
       bio: bio,
     );
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.userId)
-        .update(updatedUser.toMap())
-        .then((value) {
-      getUserData();
-    }).catchError((error) {});
+    if (coverImageUrl.isNotEmpty && profileImageUrl.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userModel!.userId)
+          .update(updatedUser.toMap())
+          .then((value) {
+        getUserData();
+      }).catchError((error) {});
+    }
   }
 }

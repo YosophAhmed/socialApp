@@ -8,14 +8,15 @@ import 'package:social_app/widgets/custom_botton.dart';
 import 'package:social_app/widgets/custom_divider.dart';
 import 'package:social_app/widgets/custom_snackbar.dart';
 
+import '../../cache/cache_helper.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/auth_cubit/auth_states.dart';
-import '../../local/cache.dart';
 import '../../widgets/custom_text_form_field.dart';
 import '../../widgets/custom_top_image.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = 'LoginScreen';
+
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -75,7 +76,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   return Form(
                     key: BlocProvider.of<AuthCubit>(context).formKey,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                      ),
                       child: Column(children: [
                         SizedBox(
                           height: 10.h,
@@ -123,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 .formKey
                                 .currentState!
                                 .validate()) {
-                              BlocProvider.of<AuthCubit>(context).login(
+                              BlocProvider.of<AuthCubit>(context).userLogin(
                                 email: email!,
                                 password: password!,
                               );
@@ -155,8 +158,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         CustomButton(
                           label: 'Create new Social account',
                           onTap: () {
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                RegisterScreen.routeName, (route) => false);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              RegisterScreen.routeName,
+                            );
                           },
                           buttonColor: Colors.green,
                           buttonWidth: 60.w,

@@ -31,3 +31,15 @@ class CreateUserErrorState extends AuthState {
     required this.error,
   });
 }
+
+class GetUserLoadingState extends AuthState {}
+
+class GetUserSuccessState extends AuthState {}
+
+class GetUserErrorState extends AuthState {
+  final String errorMessage;
+
+  GetUserErrorState({
+    required this.errorMessage,
+  });
+}

@@ -22,7 +22,7 @@ class SettingsScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = AppCubit.get(context);
-        UserModel userModel = cubit.user;
+        UserModel? userModel = cubit.userModel;
         File? profileImage = cubit.profileImage;
         File? coverImage = cubit.coverImage;
         var bioController = TextEditingController();
@@ -50,7 +50,7 @@ class SettingsScreen extends StatelessWidget {
                             image: DecorationImage(
                               image: coverImage == null
                                   ? NetworkImage(
-                                      userModel.coverImage,
+                                      userModel!.coverImage,
                                     )
                                   : FileImage(coverImage)
                                       as ImageProvider<Object>,
@@ -66,7 +66,7 @@ class SettingsScreen extends StatelessWidget {
                         child: CircleAvatar(
                           radius: 57.sp,
                           backgroundImage: profileImage == null
-                              ? NetworkImage(userModel.image)
+                              ? NetworkImage(userModel!.image)
                               : FileImage(profileImage)
                                   as ImageProvider<Object>?,
                         ),
@@ -212,7 +212,7 @@ class SettingsScreen extends StatelessWidget {
                         width: 25.w,
                       ),
                       Text(
-                        userModel.name,
+                        userModel!.name,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 22.sp,
@@ -282,13 +282,13 @@ class SettingsScreen extends StatelessWidget {
                                   CustomButton(
                                     label: 'Save',
                                     onTap: () {
-                                      if (bioController.text != '') {
-                                        cubit.changeBio(
-                                          newBio: bioController.text,
-                                        );
-                                        cubit.updateUserData();
-                                      }
-                                      Navigator.pop(context);
+                                      // if (bioController.text != '') {
+                                      //   cubit.changeBio(
+                                      //     newBio: bioController.text,
+                                      //   );
+                                      //   cubit.updateUserData();
+                                      // }
+                                      // Navigator.pop(context);
                                     },
                                   ),
                                   SizedBox(
