@@ -1,10 +1,10 @@
 class PostModel {
   String? userId;
-  late String name;
-  late String profileImage;
-  late String dateTime;
-  late String postText;
-  late String postImage;
+  String? name;
+  String? profileImage;
+  String? dateTime;
+  String? postText;
+  String? postImage;
 
   PostModel({
     required this.userId,

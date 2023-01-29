@@ -18,6 +18,8 @@ class ChangeBottomNavBarState extends AppStates {}
 
 class SelectImageState extends AppStates {}
 
+class RemoveImageState extends AppStates {}
+
 class SelectImageLoadingState extends AppStates {}
 
 class ErrorSelectImageState extends AppStates {
@@ -44,6 +46,18 @@ class ErrorAddPostState extends AppStates {
   final String errorMessage;
 
   ErrorAddPostState({
+    required this.errorMessage,
+  });
+}
+
+class LoadingGetPostsState extends AppStates {}
+
+class SuccessGetPostsState extends AppStates {}
+
+class ErrorGetPostsState extends AppStates {
+  final String errorMessage;
+
+  ErrorGetPostsState({
     required this.errorMessage,
   });
 }

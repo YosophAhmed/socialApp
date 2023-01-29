@@ -1,4 +1,3 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -29,16 +28,33 @@ class AddPostScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
+                if (state is LoadingAddPostState)
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 2.h,
+                    ),
+                    child: const LinearProgressIndicator(
+                      backgroundColor: Colors.grey,
+                      color: Colors.lightBlue,
+                    ),
+                  ),
                 Row(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(
+                    Padding(
+                      padding: const EdgeInsets.only(
                         right: 16,
                       ),
-                      child: CircleAvatar(
-                        radius: 35.0,
-                        backgroundImage: NetworkImage(
-                          'https://i.ytimg.com/vi/HOtc0TQ7WBU/maxresdefault.jpg',
+                      child: Container(
+                        height: 65,
+                        width: 65,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Image(
+                          image: cubit.userModel?.image == '' ? const AssetImage('assets/images/default_profile.jpg') :
+                          NetworkImage(cubit.userModel!.image) as ImageProvider<Object>,
+                          fit: BoxFit.fill,
                         ),
                       ),
                     ),
@@ -49,7 +65,7 @@ class AddPostScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'Thomas Shelbey',
+                                cubit.userModel!.name,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16.sp,
@@ -73,19 +89,20 @@ class AddPostScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    TextButton(
-                      onPressed: () async {
+                    if (state is! SelectImageLoadingState)
+                      TextButton(
+                        onPressed: () async {
                           await cubit.addPost();
-                      },
-                      child: const Text(
-                        'Post',
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28,
+                        },
+                        child: const Text(
+                          'Post',
+                          style: TextStyle(
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 28,
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
                 SizedBox(
@@ -96,7 +113,7 @@ class AddPostScreen extends StatelessWidget {
                   keyboardType: TextInputType.text,
                   cursorColor: Colors.blueAccent,
                   decoration: InputDecoration(
-                    hintText: cubit.postText ?? 'What\'s on your mind',
+                    hintText: cubit.postText ?? 'What\'s on your mind?',
                     border: InputBorder.none,
                   ),
                   maxLines: 10,
@@ -105,73 +122,95 @@ class AddPostScreen extends StatelessWidget {
                       cubit.postText = value;
                     }
                   },
+                  onChanged: (value){
+                    if (value != '') {
+                      cubit.postText = value;
+                    }
+                  },
                 ),
-                ConditionalBuilder(
-                  condition: cubit.postImageUrl != null,
-                  builder: (context) => Container(
-                    height: 26.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: Image(
-                      image: NetworkImage(cubit.postImageUrl!),
-                      fit: BoxFit.fill,
-                    ),
+                if (state is SelectImageState)
+                  Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          height: 26.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: Image(
+                            image: NetworkImage(cubit.postImageUrl!),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(32),
+                            color: Colors.blueAccent,
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              IconBroken.Delete,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              cubit.removePostImage();
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  fallback: (context) => SizedBox(
-                    height: 26.h,
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
                       onPressed: () {
                         customBottomModalSheet(
-                          context: context,
-                          widget: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CustomButton(
-                                  label: 'Camera',
-                                  onTap: () {
-                                    cubit.selectPostImage(
-                                      context: context,
-                                      selectionType: 'Camera',
-                                    );
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                const CustomDivider(
-                                  text: ' OR ',
-                                ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                CustomButton(
-                                  label: 'Gallery',
-                                  onTap: () {
-                                    cubit.selectPostImage(
-                                      context: context,
-                                      selectionType: 'Gallery',
-                                    );
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            ),
-                          )
-                        );
+                            context: context,
+                            widget: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CustomButton(
+                                    label: 'Camera',
+                                    onTap: () {
+                                      cubit.selectPostImage(
+                                        context: context,
+                                        selectionType: 'Camera',
+                                      );
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 2.h,
+                                  ),
+                                  const CustomDivider(
+                                    text: ' OR ',
+                                  ),
+                                  SizedBox(
+                                    height: 2.h,
+                                  ),
+                                  CustomButton(
+                                    label: 'Gallery',
+                                    onTap: () {
+                                      cubit.selectPostImage(
+                                        context: context,
+                                        selectionType: 'Gallery',
+                                      );
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ));
                       },
                       child: Row(
                         children: const [

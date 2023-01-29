@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -5,20 +6,48 @@ import '../styles/icon_broken.dart';
 import 'custom_divider.dart';
 
 class CustomSocialPost extends StatelessWidget {
-  const CustomSocialPost({Key? key}) : super(key: key);
+  final String name;
+  final String profileImage;
+  final String dateTime;
+  final String postText;
+  final String postImage;
+  final int likes;
+  final int comments;
+  final String postProfile;
+  final VoidCallback likePressed;
+  final VoidCallback commentPressed;
+
+  const CustomSocialPost({
+    Key? key,
+    this.postProfile = '',
+    required this.name,
+    required this.profileImage,
+    required this.dateTime,
+    required this.postText,
+    this.postImage = '',
+    this.likes = 0,
+    this.comments = 0,
+    required this.likePressed,
+    required this.commentPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      elevation: 20,
-      margin: const EdgeInsets.only(bottom: 15),
+    return Container(
+      margin: const EdgeInsets.only(
+        bottom: 15,
+      ),
+      color: Colors.grey.withOpacity(0.05),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomCardTop(),
+            CustomCardTop(
+              name: name,
+              dateTime: dateTime,
+              profileImage: postProfile,
+            ),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 1.0),
               child: CustomDivider(
@@ -26,37 +55,43 @@ class CustomSocialPost extends StatelessWidget {
               ),
             ),
             Text(
-              ''''\"I have no limitations\" Cillian Murphy has won the Best Actor Award for his role as Tommy Shelby in series six of Peaky Blinders at the #tvchoiceawards! Thank you to our incredible fans for voting and congratulations to Cillian! 👏''',
+              postText,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: 16.sp,
               ),
             ),
-            Wrap(
-              children: const [
-                CustomTag(
-                  tag: '#Peaky',
+            // Wrap(
+            //   children: const [
+            //     CustomTag(
+            //       tag: '#Peaky',
+            //     ),
+            //   ],
+            // ),
+            ConditionalBuilder(
+              condition: postImage != '',
+              builder: (context) => Card(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Image.network(
+                  postImage,
+                  height: 30.h,
+                  width: double.infinity,
                 ),
-              ],
-            ),
-            Card(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              child: Image.network(
-                'https://i.dailymail.co.uk/1s/2022/02/22/01/54483393-0-image-a-174_1645494308216.jpg',
-                fit: BoxFit.fill,
-                height: 25.h,
-                width: double.infinity,
+              ),
+              fallback: (context) => SizedBox(
+                height: 2.h,
               ),
             ),
             Row(
               children: [
                 CustomCommentButton(
                   onTap: () {},
+                  comments: comments,
                 ),
                 const Spacer(),
                 CustomLikeButton(
                   onTap: () {},
-                  text: '1200',
+                  text: likes.toString(),
                 ),
               ],
             ),
@@ -69,18 +104,33 @@ class CustomSocialPost extends StatelessWidget {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     right: 15,
                   ),
-                  child: CircleAvatar(
-                    radius: 20.0,
-                    backgroundImage: NetworkImage(
-                      'https://i.ytimg.com/vi/HOtc0TQ7WBU/maxresdefault.jpg',
+                  child: Container(
+                    height: 35,
+                    width: 35,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: ConditionalBuilder(
+                      condition: profileImage == '',
+                      builder: (context) => const Image(
+                        image: AssetImage(
+                          'assets/images/default_profile.jpg',
+                        ),
+                        fit: BoxFit.fill,
+                      ),
+                      fallback: (context) => Image.network(
+                        profileImage,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: commentPressed,
                   child: Text(
                     'Write a comment ...',
                     style: TextStyle(
@@ -91,7 +141,7 @@ class CustomSocialPost extends StatelessWidget {
                 ),
                 const Spacer(),
                 CustomLikeButton(
-                  onTap: () {},
+                  onTap: likePressed,
                   text: 'Like',
                 ),
               ],
@@ -104,21 +154,43 @@ class CustomSocialPost extends StatelessWidget {
 }
 
 class CustomCardTop extends StatelessWidget {
-  const CustomCardTop({Key? key}) : super(key: key);
+  final String profileImage;
+  final String name;
+  final String dateTime;
+
+  const CustomCardTop({
+    Key? key,
+    this.profileImage = '',
+    required this.name,
+    required this.dateTime,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(
+        Padding(
+          padding: const EdgeInsets.only(
             left: 8,
             right: 16,
           ),
-          child: CircleAvatar(
-            radius: 35.0,
-            backgroundImage: NetworkImage(
-              'https://i.ytimg.com/vi/HOtc0TQ7WBU/maxresdefault.jpg',
+          child: Container(
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: ConditionalBuilder(
+              condition: profileImage == '',
+              builder: (context) => const Image(
+                image: AssetImage('assets/images/default_profile.jpg'),
+                fit: BoxFit.fill,
+              ),
+              fallback: (context) => Image.network(
+                profileImage,
+                fit: BoxFit.fill,
+              ),
             ),
           ),
         ),
@@ -129,7 +201,7 @@ class CustomCardTop extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Thomas Shelbey',
+                    name,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.sp,
@@ -145,7 +217,7 @@ class CustomCardTop extends StatelessWidget {
                 ],
               ),
               Text(
-                DateTime.now().toString().substring(0, 16),
+                dateTime,
                 style: const TextStyle(
                   color: Colors.white54,
                 ),
@@ -226,10 +298,12 @@ class CustomLikeButton extends StatelessWidget {
 
 class CustomCommentButton extends StatelessWidget {
   final Function() onTap;
+  final int comments;
 
   const CustomCommentButton({
     Key? key,
     required this.onTap,
+    this.comments = 0,
   }) : super(key: key);
 
   @override
@@ -247,7 +321,7 @@ class CustomCommentButton extends StatelessWidget {
             width: 5,
           ),
           Text(
-            '500 Comments',
+            '$comments Comments',
             style: TextStyle(
               color: Colors.grey,
               fontSize: 14.sp,

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
-import 'package:social_app/constants/constants.dart';
 import 'package:social_app/cubits/app_cubit/app_cubit.dart';
 import 'package:social_app/cubits/app_cubit/app_states.dart';
-import 'package:social_app/screens/add_post_screen.dart';
 
 import '../styles/icon_broken.dart';
 
@@ -16,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => AppCubit()..getUserData(),
+      create: (BuildContext context) => AppCubit()..getUserData()..getPosts(),
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -122,39 +120,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-// body: ConditionalBuilder(
-//   condition: AppCubit.get(context).user != null,
-//   builder: (context) {
-//     UserModel user = AppCubit.get(context).user!;
-//     if (!user.isEmailVerified) {
-//       return Padding(
-//         padding: EdgeInsets.only(
-//           top: 7.h,
-//           left: 2.w,
-//           right: 2.w,
-//         ),
-//         child: CustomVerification(
-//           onPressed: () {
-//             FirebaseAuth.instance.currentUser!
-//                 .sendEmailVerification()
-//                 .then((value) {
-//               customSnackBar(
-//                 context: context,
-//                 message: 'Check your email',
-//               );
-//             }).catchError((error) {});
-//           },
-//         ),
-//       );
-//     }
-//     return const Center();
-//   },
-//   fallback: (context) {
-//     return const Center(
-//       child: CustomCircularProgressIndicator(
-//         color: Colors.blueAccent,
-//       ),
-//     );
-//   },
-// ),

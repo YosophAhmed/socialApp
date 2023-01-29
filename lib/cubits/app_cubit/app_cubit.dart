@@ -176,21 +176,57 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  void removePostImage() {
+    postImage = null;
+    postImageUrl = null;
+    emit(RemoveImageState());
+  }
+
   String? postText;
 
   Future<void> addPost() async {
     emit(LoadingAddPostState());
     try {
-      await FirebaseFirestore.instance.collection('posts').doc(userID).set({
+      await FirebaseFirestore.instance.collection('posts').add({
         'userId': userID,
         // 'postId': postId,
         'dateTime': DateTime.now().toString().substring(0, 16),
         'postText': postText,
         'postImage': postImageUrl ?? '',
+        'profileImage' : userModel!.image,
+        'name' : userModel!.name,
+
       });
+      getPosts();
+      emit(SuccessAddPostState());
     } catch (error) {
       emit(
         ErrorAddPostState(
+          errorMessage: error.toString(),
+        ),
+      );
+    }
+  }
+
+  late List<PostModel> posts = [];
+
+  Future<void> getPosts() async {
+    posts = [];
+    emit(LoadingGetPostsState());
+    try {
+      FirebaseFirestore.instance.collection('posts').get().then((value) {
+        for (var element in value.docs) {
+          posts.add(
+            PostModel.fromJson(
+              element.data(),
+            ),
+          );
+        }
+      });
+      emit(SuccessGetPostsState());
+    } catch (error) {
+      emit(
+        ErrorGetPostsState(
           errorMessage: error.toString(),
         ),
       );
