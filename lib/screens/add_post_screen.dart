@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
-import 'package:social_app/constants/constants.dart';
 import 'package:social_app/cubits/app_cubit/app_cubit.dart';
 import 'package:social_app/cubits/app_cubit/app_states.dart';
 
@@ -17,8 +16,8 @@ class AddPostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (state, context) {},
-      builder: (state, context) {
+      listener: (context, state) {},
+      builder: (context, state) {
         var cubit = AppCubit.get(context);
         var controller = TextEditingController();
         return Padding(
@@ -114,7 +113,7 @@ class AddPostScreen extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       customBottomModalSheet(
-                        context: homeContext!,
+                        context: context,
                         widget: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
@@ -124,10 +123,10 @@ class AddPostScreen extends StatelessWidget {
                                 label: 'Camera',
                                 onTap: () {
                                   cubit.selectPostImage(
-                                    context: homeContext!,
+                                    context: context,
                                     selectionType: 'Camera',
                                   );
-                                  Navigator.pop(homeContext!);
+                                  Navigator.pop(context);
                                 },
                               ),
                               SizedBox(
@@ -143,15 +142,15 @@ class AddPostScreen extends StatelessWidget {
                                 label: 'Gallery',
                                 onTap: () {
                                   cubit.selectPostImage(
-                                    context: homeContext!,
+                                    context: context,
                                     selectionType: 'Gallery',
                                   );
-                                  Navigator.pop(homeContext!);
+                                  Navigator.pop(context);
                                 },
                               ),
                             ],
                           ),
-                        ),
+                        )
                       );
                     },
                     child: Row(

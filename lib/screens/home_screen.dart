@@ -21,7 +21,6 @@ class HomeScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = AppCubit.get(context);
-          homeContext = context;
           return Scaffold(
             appBar: AppBar(
               title: Text(
