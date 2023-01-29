@@ -176,15 +176,15 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  Future<void> addPost({
-    required String postText,
-  }) async {
+  String? postText;
+
+  Future<void> addPost() async {
     emit(LoadingAddPostState());
     try {
       await FirebaseFirestore.instance.collection('posts').doc(userID).set({
         'userId': userID,
         // 'postId': postId,
-        'dateTime': DateTime.now().toString().substring(0, 12),
+        'dateTime': DateTime.now().toString().substring(0, 16),
         'postText': postText,
         'postImage': postImageUrl ?? '',
       });
