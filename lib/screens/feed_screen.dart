@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/cubits/app_cubit/app_cubit.dart';
 import 'package:social_app/cubits/app_cubit/app_states.dart';
-import 'package:social_app/widgets/custom_circular_progress_indicator.dart';
 import 'package:social_app/widgets/custom_social_post.dart';
 
 class FeedScreen extends StatelessWidget {
@@ -27,15 +26,19 @@ class FeedScreen extends StatelessWidget {
                 postImage: cubit.posts[index].postImage!,
                 profileImage: cubit.userModel!.image,
                 postProfile: cubit.posts[index].profileImage!,
-                comments: 50,
-                likes: 250,
+                comments: 0,
+                likes: 0,
                 likePressed: () {},
                 commentPressed: () {},
               ),
             ),
             fallback: (context) => const Center(
-              child: CustomCircularProgressIndicator(
-                color: Colors.blueAccent,
+              child: Text(
+                'No Posts yet',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 26,
+                ),
               ),
             ),
           );
