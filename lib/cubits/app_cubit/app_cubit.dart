@@ -193,9 +193,8 @@ class AppCubit extends Cubit<AppStates> {
         'dateTime': DateTime.now().toString().substring(0, 16),
         'postText': postText,
         'postImage': postImageUrl ?? '',
-        'profileImage' : userModel!.image,
-        'name' : userModel!.name,
-
+        'profileImage': userModel!.image,
+        'name': userModel!.name,
       });
       getPosts();
       emit(SuccessAddPostState());
@@ -232,4 +231,25 @@ class AppCubit extends Cubit<AppStates> {
       );
     }
   }
+
+  // void likePost({
+  //   required String postId,
+  // }) {
+  //   FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .doc(postId)
+  //       .collection('likes')
+  //       .doc(userID)
+  //       .set({
+  //     'like': true,
+  //   }).then((value) {
+  //     emit(SuccessLikePostsState());
+  //   }).catchError((error) {
+  //     emit(
+  //       ErrorLikePostsState(
+  //         errorMessage: error.toString(),
+  //       ),
+  //     );
+  //   });
+  // }
 }

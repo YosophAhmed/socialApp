@@ -61,3 +61,14 @@ class ErrorGetPostsState extends AppStates {
     required this.errorMessage,
   });
 }
+
+
+class SuccessLikePostsState extends AppStates {}
+
+class ErrorLikePostsState extends AppStates {
+  final String errorMessage;
+
+  ErrorLikePostsState({
+    required this.errorMessage,
+  });
+}
